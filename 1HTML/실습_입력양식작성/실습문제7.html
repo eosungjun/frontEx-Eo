@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <title>피자 주문</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="datetime-local"], textarea, select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+        }
+
+        .button-group input {
+            margin-bottom: 5px;
+            cursor: pointer;
+            border: 1px solid #007bff;
+            border-radius: 4px;
+            background-color: #fff;
+            color: #007bff;
+        }
+
+        .button-group input.selected {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .total-price {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .selected-options {
+            margin-top: 20px;
+        }
+
+        .selected-options span {
+            font-weight: bold;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:disabled {
+            background-color: #d6d6d6;
+            cursor: not-allowed;
+        }
+
+        .address-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .address-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .address-field select, .address-field input {
+            width: calc(100% - 22px); /* Adjust for padding and border */
+            margin-left: 22px;
+        }
+
+        .address-field .address-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>피자 주문하기</h1>
+    <form id="pizza-order-form">
+        <ul>
+            <li>
+                <label for="customer-name">고객명</label>
+                <input type="text" name="customer-name" id="customer-name" placeholder="이름을 입력하세요">
+            </li>
+            <li>
+                <label for="phone">전화번호</label>
+                <input type="text" name="phone" id="phone" placeholder="010-1234-1234">
+            </li>
+            <li>
+                <label for="email">이메일</label>
+                <input type="text" name="email-id" id="email-id" placeholder="example">
+                @
+                <select id="email-domain">
+                    <option value="">도메인 선택</option>
+                    <option value="naver.com">naver.com</option>
+                    <option value="nate.com">nate.com</option>
+                    <option value="gmail.com">gmail.com</option>
+                    <option value="daum.net">daum.net</option>
+                </select>
+            </li>
+            <li>
+                <label>피자 사이즈</label>
+                <div class="button-group" id="pizza-size">
+                    <input type="button" value="Small - 15,000원" data-price="15000" data-size="small">
+                    <input type="button" value="Medium - 20,000원" data-price="20000" data-size="medium">
+                    <input type="button" value="Large - 30,000원" data-price="30000" data-size="large">
+                </div>
+            </li>
+            <li>
+                <label>토핑 선택</label>
+                <div class="button-group" id="topping">
+                    <input type="button" value="베이컨 (+1,000원)" data-price="1000" data-topping="베이컨">
+                    <input type="button" value="치즈 (+1,000원)" data-price="1000" data-topping="치즈">
+                    <input type="button" value="양파 (+1,000원)" data-price="1000" data-topping="양파">
+                    <input type="button" value="버섯 (+1,000원)" data-price="1000" data-topping="버섯">
+                </div>
+            </li>
+            <li id="delivery-time-container">
+                <label for="delivery-time">희망 배송시간</label>
+                <input type="datetime-local" id="delivery-time" name="delivery-time">
+            </li>
+            <li>
+                <div class="address-container">
+                    <div class="address-field">
+                        <label class="address-label" for="state">시도</label>
+                        <select id="state" name="state">
+                            <option value="">시/도 선택</option>
+                            <option value="서울특별시">서울특별시</option>
+                            <option value="부산광역시">부산광역시</option>
+                            <option value="대구광역시">대구광역시</option>
+                            <option value="인천광역시">인천광역시</option>
+                            <option value="광주광역시">광주광역시</option>
+                            <option value="대전광역시">대전광역시</option>
+                            <option value="울산광역시">울산광역시</option>
+                            <option value="세종특별자치시">세종특별자치시</option>
+                            <option value="경기도">경기도</option>
+                            <option value="강원도">강원도</option>
+                            <option value="충청북도">충청북도</option>
+                            <option value="충청남도">충청남도</option>
+                            <option value="전라북도">전라북도</option>
+                            <option value="전라남도">전라남도</option>
+                            <option value="경상북도">경상북도</option>
+                            <option value="경상남도">경상남도</option>
+                            <option value="제주도">제주도</option>
+                        </select>
+                    </div>
+                    <div class="address-field">
+                        <label class="address-label" for="county">군/구</label>
+                        <select id="county" name="county">
+                            <option value="">군/구 선택</option>
+                            <option value="강남구">강남구</option>
+                            <option value="강동구">강동구</option>
+                            <option value="강북구">강북구</option>
+                            <option value="강서구">강서구</option>
+                            <option value="관악구">관악구</option>
+                            <option value="광진구">광진구</option>
+                            <option value="구로구">구로구</option>
+                            <option value="금천구">금천구</option>
+                            <option value="노원구">노원구</option>
+                            <option value="도봉구">도봉구</option>
+                            <option value="동대문구">동대문구</option>
+                            <option value="동작구">동작구</option>
+                            <option value="마포구">마포구</option>
+                            <option value="서대문구">서대문구</option>
+                            <option value="서초구">서초구</option>
+                            <option value="성동구">성동구</option>
+                            <option value="성북구">성북구</option>
+                            <option value="송파구">송파구</option>
+                            <option value="양천구">양천구</option>
+                            <option value="영등포구">영등포구</option>
+                            <option value="용산구">용산구</option>
+                            <option value="은평구">은평구</option>
+                            <option value="종로구">종로구</option>
+                            <option value="중구">중구</option>
+                            <option value="중랑구">중랑구</option>
+                            <!-- Add more counties as needed -->
+                        </select>
+                    </div>
+                    <div class="address-field">
+                        <label class="address-label" for="detailed-address">상세 주소</label>
+                        <input type="text" id="detailed-address" name="detailed-address" placeholder="상세 주소를 입력하세요">
+                    </div>
+                </div>
+            </li>
+            <li>
+                <label for="special-requests">배송 요청사항</label>
+                <textarea id="special-requests" name="special-requests" rows="4" placeholder="요청사항을 입력하세요"></textarea>
+            </li>
+            <li class="total-price">총 금액: <span id="total-price">0</span>원</li>
+            <li class="selected-options">
+                <p>선택된 피자 사이즈: <span id="selected-size">없음</span></p>
+                <p>선택된 토핑: <span id="selected-toppings">없음</span></p>
+            </li>
+            <li><button type="submit">주문하기</button></li>
+        </ul>
+    </form>
+
+    <script>
+        function updateTotalPrice() {
+            const sizeInput = document.querySelector('#pizza-size input.selected');
+            const toppingInputs = document.querySelectorAll('#topping input.selected');
+            
+            let totalPrice = 0;
+
+            if (sizeInput) {
+                totalPrice += parseInt(sizeInput.dataset.price);
+            }
+
+            toppingInputs.forEach(topping => {
+                totalPrice += parseInt(topping.dataset.price);
+            });
+
+            document.querySelector('#total-price').textContent = totalPrice.toLocaleString();
+        }
+
+        function updateSelectedOptions() {
+            const sizeInput = document.querySelector('#pizza-size input.selected');
+            const toppingInputs = document.querySelectorAll('#topping input.selected');
+
+            document.querySelector('#selected-size').textContent = sizeInput ? sizeInput.value.split(' - ')[0] : '없음';
+            document.querySelector('#selected-toppings').textContent = toppingInputs.length > 0 ? Array.from(toppingInputs).map(topping => topping.dataset.topping).join(', ') : '없음';
+        }
+
+        document.querySelectorAll('#pizza-size input').forEach(input => {
+            input.addEventListener('click', function () {
+                document.querySelectorAll('#pizza-size input').forEach(btn => btn.classList.remove('selected'));
+                this.classList.add('selected');
+                updateTotalPrice();
+                updateSelectedOptions();
+            });
+        });
+
+        document.querySelectorAll('#topping input').forEach(input => {
+            input.addEventListener('click', function () {
+                const checkedToppings = document.querySelectorAll('#topping input.selected');
+                if (checkedToppings.length >= 4 && !this.classList.contains('selected')) {
+                    alert('토핑은 최대 4개까지 선택할 수 있습니다.');
+                } else {
+                    this.classList.toggle('selected');
+                    updateTotalPrice();
+                    updateSelectedOptions();
+                }
+            });
+        });
+
+        document.querySelector('#pizza-order-form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Get form values
+            const customerName = document.querySelector('#customer-name').value.trim();
+            const phone = document.querySelector('#phone').value.trim();
+            const emailId = document.querySelector('#email-id').value.trim();
+            const emailDomain = document.querySelector('#email-domain').value;
+            const pizzaSize = document.querySelector('#pizza-size input.selected')?.dataset.size || '';
+            const toppings = Array.from(document.querySelectorAll('#topping input.selected')).map(cb => cb.dataset.topping).join(', ');
+            const deliveryTime = document.querySelector('#delivery-time').value.trim();
+            const state = document.querySelector('#state').value.trim();
+            const county = document.querySelector('#county').value.trim();
+            const detailedAddress = document.querySelector('#detailed-address').value.trim();
+            const specialRequests = document.querySelector('#special-requests').value.trim();
+
+            if (!customerName || !phone || !emailId || !emailDomain || !pizzaSize || !deliveryTime || !state || !county || !detailedAddress) {
+                alert('모든 필드를 올바르게 입력해 주세요.');
+                return;
+            }
+
+            // Output to console
+            console.log('고객명:', customerName);
+            console.log('전화번호:', phone);
+            console.log('이메일:', `${emailId}@${emailDomain}`);
+            console.log('피자 사이즈:', pizzaSize);
+            console.log('토핑:', toppings);
+            console.log('희망 배송시간:', deliveryTime);
+            console.log('시도:', state);
+            console.log('군/구:', county);
+            console.log('상세 주소:', detailedAddress);
+            console.log('배송 요청사항:', specialRequests);
+
+            // Show completion alert
+            alert('주문이 완료되었습니다!');
+        });
+    </script>
+</body>
+
+</html>
+
+

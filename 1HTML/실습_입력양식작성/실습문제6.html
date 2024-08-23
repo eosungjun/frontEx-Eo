@@ -2,10 +2,10 @@
 <html lang="ko">
 
 <head>
-	<meta charset="utf-8">
-	<title>프런트엔드 개발자 지원서</title>
-	<style>
-		#container {
+    <meta charset="utf-8">
+    <title>프런트엔드 개발자 지원서</title>
+    <style>
+       #container {
 			width: 520px;
 			border: 1px solid black;
 			padding: 20px 40px;
@@ -30,60 +30,100 @@
 
 		li {
 			line-height: 30px;
-			background-color: rgb(252, 97, 97);
 		}
 		p{
 			font-weight: 800;
 		}
-		input{
-			border-radius: 5px;
-		}
+	
+		textarea {
+            border-radius: 5px;
+            padding: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
 
-	</style>
+    </style>
 </head>
 
 <body>
-	<div id="container">
-		<h1>프런트엔드 개발자 지원서</h1>
-		HTML, CSS, Javascript에 대한 기술적 이해와 경험이 있는 분을 찾습니다.
+    <div id="container">
+        <h1>프런트엔드 개발자 지원서</h1>
+        HTML, CSS, Javascript에 대한 기술적 이해와 경험이 있는 분을 찾습니다.
 
-		<hr>
-		<form>
-			
-				<p>개인정보</p>
-				<ul>
-					<li>
-						이름 <input type="text" name="name" id="" placeholder="공백없이 입력하세요">
-					</li>
-					<li>
-						연락처 <input type="text" name="phonenumber" id="">
-					</li>
-					
-				</ul>
-				
-				<p>지원분야</p>
-				<ul>
-					<li><input type="radio" name="type" id="" value="pub"> 웹 퍼블리싱 <br>
-						<input type="radio" name="type" id="dev"> 웹 애플리케이션 개발 <br>
-						<input type="radio" name="type" id="conf"> 개발 환경 개선 <br>
-					</li>
-				</ul>
-	
-				<p>지원동기</p>
-				
-				<textarea name="" id=""rows="5" cols="60" placeholder="본사 지원 동기를 간략히 써주세요" ></textarea>
-			<p>
-			<button type="submit">접수하기</button>  <button type="reset">다시쓰기</button>
-			</p>
-		</form>
-		
+        <hr>
+        <form>
+            <p>개인정보</p>
+            <ul>
+                <li>
+                    이름 <input type="text" name="name" id="name" placeholder="홍길동">
+                </li>
+                <li>
+                    연락처 <input type="text" name="phonenumber" id="phonenumber" placeholder="010-0000-0000">
+                </li>
+            </ul>
 
+            <p>지원분야</p>
+            <ul>
+				<li><input type="radio" name="type" id="" value="pub"> 웹 퍼블리싱<br> 
+					<input type="radio" name="type" id="dev"> 웹 애플리케이션 개발<br> 
+					<input type="radio" name="type" id="conf"> 개발 환경 개선 <br> 
+				</li>
+			</ul>
 
+            <p>지원동기</p>
+            <p>
+				<textarea name="motivation" id="motivation" rows="5" placeholder="본사 지원 동기를 간략히 써주세요"></textarea>
+            	<button type="submit" id="btn">접수하기</button>
+                <button type="reset">다시쓰기</button>
+        	</p>
+        </form>
+    </div>
 
-		<form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelector('#btn').addEventListener('click', function (event) {
+                event.preventDefault(); 
 
-		</form>
-	</div>
+                let name = document.querySelector("#name").value.trim();
+                let phoneNumber = document.querySelector("#phonenumber").value.trim();
+                let type = document.querySelector('input[name="type"]:checked');
+				let motivation = document.querySelector("#motivation").value.trim();
+
+                if (name.length === 0) {
+                    alert("이름을 입력해주세요.");
+                    return;
+                }
+
+               
+                const phoneRegex = /^\d{10,11}$/; 
+                if (phoneNumber.length === 0) {
+                    alert("연락처를 입력해주세요.");
+                    return;
+                } else if (!phoneRegex.test(phoneNumber)) {
+                    alert("연락처는 10자리 또는 11자리 숫자만 입력할 수 있습니다.");
+                    return;
+                }
+
+                if (!type) {
+                    alert("지원분야를 선택해주세요.");
+                    return;
+                }
+
+                if (motivation.length === 0) {
+                    alert("지원동기를 입력해주세요.");
+                    return;
+				}	
+
+				console.log(`아이디: ${name}`);
+                console.log(`전화번호: ${phoneNumber}`);
+                console.log(`지원분야: ${type.value}`);
+                console.log(`지원동기: ${motivation}`);
+
+                alert("모든 항목이 올바르게 입력되었습니다.");
+            	
+			});
+		});
+    </script>
 </body>
 
 </html>

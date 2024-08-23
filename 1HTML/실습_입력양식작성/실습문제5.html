@@ -2,77 +2,220 @@
 <html lang="ko">
 
 <head>
-	<meta charset="utf-8">
-	<title>예약 접수</title>
-	<style>
-		ul {
-			list-style: none;
-		}
+    <meta charset="utf-8">
+    <title>예약 접수</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
 
-		li {
-			line-height: 50px;
-			
-		}
+        ul {
+            list-style: none;
+            padding: 0;
+        }
 
-		label {
+        li {
+            margin-bottom: 10px;
+        }
 
-			text-align: left;
-			width: 80px;
-			float: left;
-		}
-	</style>
+        label {
+            display: inline-block;
+            width: 80px;
+        }
+
+        input, select {
+            margin-left: 10px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 
 <body>
-	<h1>예약 정보</h1>
-	hint. 목록태그를 이용하면 들여쓰기가 가능 합니다
-	<!--form 시작태그와 끝태그 사이에 있는 요소들을 서버로 전달
-		name 속성이 정의된 항목만 전달(name 속성이 없는경우 전달되지 않음)-->
-	<form>
-		<ul> <!--?name=&phone=&email=-->
-			<li>
-				<!--for = 연결하려는 요소의 아이디값
-						: 라벨을 선택 했을 때 요소가 선택됨
-					name : 서버에 전달될 이름
-					value : 서버에 전달될 값
-					queryString(쿼리스트링) : 주소? name속성의 값 = value속성의 값
-					checkbox, radio 의 경우 선택된(checked 속성이 있는) 요소의 값이 서버에 전달 
-					
-					-->
+    <h1>예약 정보</h1>
+    <form id="reservation-form">
+        <ul>
+            <li>
+                <label for="name">이름</label>
+                <input type="text" name="name" id="name" placeholder="이름입력">
+            </li>
+            <li>
+                <label for="phone">휴대폰</label>
+                <input type="text" name="phone" id="phone" placeholder="010-1234-1234">
+            </li>
+            <li>
+                <label for="email">이메일</label>
+                <input type="text" name="id" id="id" placeholder="아이디입력">
+                @
+                <select id="email-domain">
+                    <option value="">도메인 선택</option>
+                    <option value="naver.com">naver.com</option>
+                    <option value="nate.com">nate.com</option>
+                    <option value="gmail.com">gmail.com</option>
+                    <option value="daum.net">daum.net</option>
+                </select>
+            </li>
+            <li>
+                <label for="pw">비밀번호</label>
+                <input type="password" name="pw" id="pw"placeholder="비밀번호입력">
+            </li>
+            <li>
+                <label for="continent">대륙</label>
+                <select id="continent">
+                    <option value="">대륙 선택</option>
+                    <option value="아시아">아시아</option>
+                    <option value="유럽">유럽</option>
+                    <option value="북미">북미</option>
+                    <option value="남미">남미</option>
+                    <option value="아프리카">아프리카</option>
+                    <option value="오세아니아">오세아니아</option>
+                </select>
+            </li>
+            <li>
+                <label for="country">국가</label>
+                <select id="country">
+                    <option value="">국가 선택</option>
+                </select>
+            </li>
+            <li>
+                <label>취미</label>
+                <input type="checkbox" name="hobby" id="hobby-soccer" value="축구">축구
+                <input type="checkbox" name="hobby" id="hobby-baseball" value="야구">야구
+                <input type="checkbox" name="hobby" id="hobby-volleyball" value="배구">배구
+                <input type="checkbox" name="hobby" id="hobby-basketball" value="농구">농구
+            </li>
+            <li>
+                <label>성별</label>
+                <input type="radio" name="gender" id="gender-male" value="남">남
+                <input type="radio" name="gender" id="gender-female" value="여">여
+            </li>
+            <li><button type="submit">예약하기</button></li>
+        </ul>
+    </form>
 
+    <script>
+        
+        const continents = {
+            '아시아': [
+                { value: '대한민국', text: '대한민국' },
+                { value: '일본', text: '일본' },
+                { value: '중국', text: '중국' },
+                { value: '인도', text: '인도' },
+                { value: '태국', text: '태국' },
+                { value: '싱가포르', text: '싱가포르' },
+                { value: '말레이시아', text: '말레이시아' },
+                { value: '필리핀', text: '필리핀' }
+            ],
+            '유럽': [
+                { value: '프랑스', text: '프랑스' },
+                { value: '독일', text: '독일' },
+                { value: '이탈리아', text: '이탈리아' },
+                { value: '스페인', text: '스페인' },
+                { value: '영국', text: '영국' },
+                { value: '러시아', text: '러시아' },
+                { value: '네덜란드', text: '네덜란드' },
+                { value: '벨기에', text: '벨기에' }
+            ],
+            '북미': [
+                { value: '미국', text: '미국' },
+                { value: '캐나다', text: '캐나다' },
+                { value: '멕시코', text: '멕시코' }
+            ],
+            '남미': [
+                { value: '브라질', text: '브라질' },
+                { value: '아르헨티나', text: '아르헨티나' },
+                { value: '칠레', text: '칠레' },
+                { value: '콜롬비아', text: '콜롬비아' }
+            ],
+            '아프리카': [
+                { value: '남아프리카 공화국', text: '남아프리카 공화국' },
+                { value: '나이지리아', text: '나이지리아' },
+                { value: '케냐', text: '케냐' },
+                { value: '이집트', text: '이집트' }
+            ],
+            '오세아니아': [
+                { value: '호주', text: '호주' },
+                { value: '뉴질랜드', text: '뉴질랜드' }
+            ]
+        };
 
-				<label for="name">이름</label>
-				<input type="text" name="name" id="" value="user01"></li>
-			<li>
-				<label>휴대폰</label> 
-				<input type="text" name="phone" id="" placeholder="010-123-1234"></li>
-			<li>
-				<label>이메일</label> 
-				<input type="email" name="email" id=""></li>
-			<li>
-				<label for="">검색</label> 
-				<input type="search" name="search" id=""></li>
-			<li>
-				<label for="">비밀번호</label> 
-				<input type="password" name="pw" id=""></li>
-			<li>
-				<label for="">취미</label>
-				<!--checkbox는 name으로 묶여짐-->
-				<input type="checkbox" name="hobby" id="" value="a">축구
-				<input type="checkbox" name="hobby" id="" value="b">야구
-				<input type="checkbox" name="hobby" id="" value="c">배구
-				<input type="checkbox" name="hobby" id="" value="d">농구
-			</li>
-			<li>
-				<label for="">성별</label>
-				<input type="radio" name="jender" id="" value="m">남
-				<input type="radio" name="jender" id="" value="f">여
-			</li>
-			<li><button>예약하기</button></li>
+        function updateCountryOptions(continent) {
+            const countrySelect = document.querySelector('#country');
+            countrySelect.innerHTML = '<option value="">국가 선택</option>';
+            if (continents[continent]) {
+                continents[continent].forEach(country => {
+                    const option = document.createElement('option');
+                    option.value = country.value;
+                    option.textContent = country.text;
+                    countrySelect.appendChild(option);
+                });
+            }
+        }
 
-			
-		</ul>
-	</form>
+        
+        document.querySelector('#continent').addEventListener('change', function () {
+            const continent = this.value;
+            updateCountryOptions(continent);
+        });
+
+        
+        document.querySelectorAll('input[name="hobby"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                const checkedBoxes = document.querySelectorAll('input[name="hobby"]:checked');
+                if (checkedBoxes.length > 3) {
+                    this.checked = false;
+                    alert('취미는 최대 3개까지 선택할 수 있습니다.');
+                }
+            });
+        });
+
+        
+        document.querySelector('#reservation-form').addEventListener('submit', function (event) {
+            event.preventDefault(); 
+
+          
+            const name = document.querySelector('#name').value.trim();
+            const phone = document.querySelector('#phone').value.trim();
+            const emailId = document.querySelector('#id').value.trim();
+            const emailDomain = document.querySelector('#email-domain').value;
+            const password = document.querySelector('#pw').value.trim();
+            const hobbies = Array.from(document.querySelectorAll('input[name="hobby"]:checked')).map(checkbox => checkbox.value);
+            const gender = document.querySelector('input[name="gender"]:checked')?.value || '';
+            const country = document.querySelector('#country').value;
+
+            if (!name || !phone || !emailId || !emailDomain || !password || !gender || !country) {
+                alert('모든 항목을 입력해 주세요.');
+                return;
+            }
+
+            if (hobbies.length === 0) {
+                alert('취미를 선택해 주세요.');
+                return;
+            }
+
+            console.log('이름:', name);
+            console.log('휴대폰:', phone);
+            console.log('이메일:', `${emailId}@${emailDomain}`);
+            console.log('비밀번호:', password);
+            console.log('취미:', hobbies.join(', '));
+            console.log('성별:', gender);
+            console.log('국가:', country);
+
+        
+            alert('예약이 완료되었습니다!');
+        });
+    </script>
 </body>
 
 </html>
